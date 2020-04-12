@@ -25,6 +25,8 @@ RUN wget "http://youfailit.net/pub/idgames/idstuff/quake3/linux/${ioquake_data}"
         ./${ioquake_data} --tar xvf && \
         rm -rf ./${ioquake_data}
 
+COPY ./arena /usr/share/games/quake3/arena
+
 USER Debian-quake3
 
 EXPOSE 27960/udp

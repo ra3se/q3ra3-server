@@ -9,6 +9,5 @@ services:
     restart: unless-stopped
     volumes:
       - ./pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3
-      - ./arena:/usr/share/games/quake3/arena
       - ./server.cfg:/usr/share/games/quake3/baseq3/server.cfg
       - ./arena.cfg:/usr/share/games/quake3/arena/arena.cfg

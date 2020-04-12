@@ -33,4 +33,4 @@ EXPOSE 27960/udp
 
 ENTRYPOINT ["/usr/games/quake3-server"]
 
-CMD ["+map", "q3dm17", "+exec", "server.cfg"]
+CMD ["+map", "ra3map1", "+exec", "server.cfg"]

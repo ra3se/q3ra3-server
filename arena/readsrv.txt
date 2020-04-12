@@ -1,0 +1,351 @@
+Title    		: Rocket Arena 3 Server Readme
+Version  		: 1.75 RELEASE
+Webpage			: http://www.planetquake.com/arena
+Date     		: 2003-04-16
+Document author	 	: Jonas Ingermaa "peak" (peak@carmack.nu) & Patrik "ElQueffo" Persson
+Document version	: 1.1
+
+--------------------------------------
+ Document version history
+--------------------------------------
+2004-03-07
+Updated with 1.75 info.
+
+2003-08-15
+Update with 1.7 info.
+
+2003-05-21
+Small updates.
+
+2003-04-16
+1.0 Initial release.
+
+--------------------------------------
+ Introduction
+--------------------------------------
+This document will describe how to install and configure Rocket Arena 3 server 1.7 in Windows and Linux.
+
+--------------------------------------
+ File listing in ra3175sv.zip
+--------------------------------------
+* readsrv.txt (this file)
+* ra3_server.sh, simple startup shellscript for Unix
+* ra3_server.bat, simple startup batfile for Windows
+* arena.cfg, example arena config file
+* server.cfg, example server config file
+* qagamex86.dll
+* qagamei386.so
+* pb_cvars.cfg, recomended pb cvar restrictions.
+
+
+--------------------------------------
+ New server commands since RA3 1.7
+--------------------------------------
+g_httpd 1/0
+Enable or disable the built-in webserver. Only enable this in a secure environment! 
+There is no access control!
+
+g_statsThreshold [minutes]
+Threshold for stats to register in the database. Requires g_trackStats and g_trackPlayers.
+
+g_timeouts [number:length]
+Set number of and length of timeouts.
+
+g_autobalance [threshold]
+Enable or disable team autobalancing in CA.
+Threshold is the (damage * 100 / time) difference between teams that has to be reached before
+teams are balanced. If SUM_red(damage * 100 / time) - SUM_blue(damage * 100 / time) > threshold then balance.
+
+g_rotateLogs 1/0
+Enable or disable log rotation. Files will be named g_logfile setting + mapname_date_time.log.
+
+g_trackStats 1/0
+Track player statistics in the database. Requires g_trackPlayers.
+
+g_trackPlayers 1/0
+Track players in the database. Requires PB to be enabled.
+
+--------------------------------------
+ New server commands since RA3 1.5
+--------------------------------------
+g_chatFlood [lines:seconds:limit]
+Chatflood protection. 
+"lines": number of chatlines you can type in XX "seconds"
+"seconds": in within time you can type XX "lines"
+"limit": is how many times you can trigger the flood protection before being kicked
+
+g_voteInterval [seconds]
+Minimum of seconds between allowed callvote command
+"seconds": how many seconds between two callvotes we allow. 
+Eg. if you set it to "60" players cant callvote before 60 seconds has passed before last callvote.
+
+g_votePercent [percent]
+Votepercent for callvote commands.
+"percent" (0-100), percent "vote yes" of votes to trigger callvote command.
+Eg. if set to "0" all votes will pass, if set to "100" all players have to vote yes.
+
+g_compmodeBlackout 1/0
+Enable(1) or disable(0) the black screen feature in competition mode.
+
+--------------------------------------
+ Installation
+--------------------------------------
+This is the server package for Rocket Arena 3. You will also need the client
+package (a seperate download) installed on the server. Download it and install
+according to the included instructions.
+
+Extract all files to your \quake3\arena directory
+
+Customize the server.cfg to your tastes. It includes the adminpass (see below)
+which will allow for in-game configuration of the mod. Please change this
+password!
+
+Please see below for info on the arena.cfg file, used to customize settings
+on a per server/per level/per arena basis. 
+It includes map rotation information as well.
+
+The "ra3_server.bat" file ("ra3_server.sh" for Unix) has a sample command line for
+starting an RA3 server. Note that:
+1. You must set "+set fs_game arena" on the command line
+2. You must set "+set bot_enable 0" on the command line
+3. You must set +set vm_game 0" on the command line
+
+--------------------------------------
+ Startup commands
+--------------------------------------
+Startup commandline example:
+
+Windows:
+"quake3.exe +set fs_game arena +set vm_game 0 +set sv_pure 1 +set bot_enable 0 +set dedicated 2 +set net_port 27960 +exec server.cfg"
+
+Sample batfile for Windows is in the file ra316sv.zip, called "ra3_server.bat".
+
+Unix:
+"./q3ded +set fs_game arena +set vm_game 0 +set sv_pure 1 +set bot_enable 0 +set dedicated 2 +set net_port 27960 +exec server.cfg"
+
+Sample shellscript for Linux is in the file ra316sv.zip, called "ra3_server.sh".
+
+Use "+set dedicated 0" to run a Listen server (you play on the same machine) not recommended!
+Use "+set dedicated 1" to run a private dedicated server
+Use "+set dedicated 2" to run a public dedicated server
+
+For info how-to configure your RA3 server with punkbuster support, please see http://www.punkbuster.com/
+
+--------------------------
+ Administration / Mod setup
+--------------------------
+There are several console variables which control how the mod functions.
+Most other options have been moved to the arena.cfg file.
+
+"set g_adminpass mypassword" is the password that you set to allow in-game
+administration of the server.
+
+"set arenacfg myarena.cfg" will allow you to use filenames other than arena.cfg 
+(to run two different servers on the same install for example).
+
+"set location <locationcode>" will allow players to find servers by region, a list
+of region locationcodes is in the sample server.cfg
+
+"set rconPassword mypassword" sets the standard Q3 remote console password. You can use
+this password with the "rcon" command to control the server remotely.
+
+--------------------------------------
+ server.cfg file
+--------------------------------------
+See file server.cfg in ra316sv.zip for example configuration
+
+--------------
+ arena.cfg file
+--------------
+The arena.cfg file allows you to specify map options on a:
+1. per server
+2. per map
+3. per arena
+basis
+Information is stored in a hierarchical format. Priority goes in order to:
+1. Values for the specific arena
+2. Values for that map
+3. Global values defined at the top of the arena.cfg file
+4. Default values stored in the game code.
+
+The format of the file is (note that the < > characters are not typed!):
+<global default option>;
+<global default option>;
+<mapname> {
+//comment
+	<map default option>;
+	<map default option>;
+	<map default option>;
+	<arena number> {
+			<arena default option>;
+			<arena default option>;
+			<arena default option>;
+	}
+	<arena number> {
+			<arena default option>;
+	}
+}
+
+For example:
+//-----------START OF FILE------------
+maploop: ra3map1 ra3map3 ra3map5 q3dm6; // <-- sets the map rotation for the server
+allowvotinggrapple:1; // <-- allows people to vote for grapple on this map
+ra3map1 {    // <-- ra3map1 is the map name
+		weapons: 1 2 3 4 5 6 7 8; //<-- these will be the default weapons, if none are specified for an arena
+		armor: 200; //<-- default health if none is specified
+		health: 100; //<-- default armor
+	1 {
+		weapons: 1 2 3 4 5 6 7; //<-- arena 1 takes out the plasma
+		armor: 100;  //<-- reduces default armor to 100
+		playersperteam: 2; //<-- 2v2 matches
+		rounds: 3; //<-- 2 out of 3 rounds wins the match
+	}
+	2 {
+		weapons: 1 2 3 4 5 6 7 8 9 0; //<-- all weapons allowed
+		armor: 150; //<-- only 150 armor
+		health: 90; //<-- 90 health to start
+		gametype: pickup; //<-- designates this as a pickup arena (will use the "defpickuparena" arena type)
+		rounds: 9; //<-- 5 out of 9 rounds takes the match
+	}
+	3 {
+		gametype: practicearena; //<<-- Changes the default gametype for this arena (from rocketarena to practicearena)
+	}
+	4 {
+		health: 500; //<-- start with a ton of health
+		armor: 500; //<-- and lots of armor
+		slugs: 999; //<-- starting slugs is 999 now
+	}
+//you do not need to list all the maps/arenas, unlisted ones will use defaults
+}
+q3dm6 {
+		minping: 0; //all people allowed on this map. Overrides global 150 value
+		gametype: redrover; //all arenas (only 1 actually) will be redrover
+		grenades: 1; //can't go crazy with hyperblaster
+}
+
+//-----------END OF FILE------------
+
+Available Options are:
+
+weapons: 1 2 3 4 5 6 7 8; 
+//where the number corresponds to the default Q3 binding
+health: 100;
+armor: 100;
+shells: 100;
+bullets: 200;
+slugs: 50;
+grenades: 20;
+rockets: 50;
+cells: 150;
+plasma: 100;
+bfgammo: 20;
+playersperteam: 1; //maximum number of players to allow on a team (for creating 2v2/3v3/etc arenas)
+healthprotect: 1; // 0 = hurt self and team, 1 = don't hurt self or team, 2 = hurt self, not team
+armorprotect: 2; // 0 = hurt self and team, 1 = don't hurt self or team, 2 = hurt self, not team
+fallingdamage: 1;
+defpickup:clanarena; //sets what type of game to have in the arenas designated "pickup". For example, changing this to "redrover" will change all the pickup arenas from clan arena to red rover.
+competitionmode: 0; //enables compeition mode (can't track other team after you die)
+excessive: 0; //yup
+rounds: <odd numbered value>;
+lockcount: 6; //number of players needed to lock an arena
+votetries: 2; //number of times a player can vote without a success (prevent spam)
+
+allowvotinggametype: 1;
+allowvotinghealtharmor: 1;
+allowvotingplayersperteam: 1;
+allowvotingrounds:1;
+allowvotinghealtharmorprotect: 1;
+allowvotingweapons: 1;
+allowvotingfallingdamage: 1;
+allowvotingexcessive: 0;
+allowvotinggrapple:0;
+
+
+Please take a look at the included arena.cfg for some more examples.
+If your settings are not being used, please make sure that:
+1. you have a ":" (colon) seperating the identifier and the value
+2. you have a ";" (semi-colon) at the end each line
+
+------------
+ Game Types
+------------
+Rocket Arena 3 has 4 different types of games that can go on in the arenas:
+"rocketarena" - 1v1/2v2/3v3 line-based gameplay
+"clanarena" - 2 teams of unlimited size, no line
+"redrover" - 2 teams, players switch between them when they die
+"practice" - No teams, no deaths, just carnage
+See the client readme for longer descriptions of each game type.
+
+The gametype for each arena is specified by the "gametype" value in the arena.cfg.
+If no gametype is specified, the default of "rocketarena" will be used. 
+If the gametype is specified as "pickup" then the game type defined at the top of the file
+as "defpickup" will be used. By default almost all of the RA3 maps are set up with one arena as
+pickup, and the defpickup value as "clanarena". So if you want to switch your whole server over
+to redrover, you just need to change the "defpickup" value.
+
+----------------------
+ In Game Administration
+----------------------
+To use the in game administration, press esc and go to the in-game options menu.
+There is a menu item for "admin". To admin a specific arena, type in your password and
+double click on the arena name. It will then let you change all the settings for that arena.
+
+To change maps, just type in the password and double click a map in the list.
+
+-------------------
+ Troubleshooting/FAQ
+-------------------
+
+Q: It asks for a CD when the server starts up?
+or
+Q: It won't load any maps?
+
+A: Make sure you have +bot_enable 0 on the command line. RA3 does not support Q3 bots yet.
+
+
+Q: How do I change the map loop or add another map?
+
+A: Edit the maploop line of arena.cfg (see below for more info)
+
+
+Q: Can I run custom or regular Q3 maps with RA3?
+
+A: Yes, just add them to your map loop (see below)
+
+
+Q: When I start a server or load a map it doesn't work, or it gives me an out
+of memory error?
+
+A: Make sure your "com_hunkmegs" setting is at least 64
+
+
+Q: I get an error like "Error reading config file: unbalanced {}" when running a server?
+
+A: You made a mistake while editing arena.cfg - restore the original file from the zip.
+
+
+--------------------------------------
+Copyright and Distribution Permissions
+--------------------------------------
+This mod is freely distributable provided that this readme is distributed
+as well and is unchanged.
+
+All code is Copyright David Wright 2000.
+Rocket Arena is a registered trademark of David Wright
+Commercial code licensing is available by contacting wrightd@gamespy.com
+
+DISCLAIMER: THE PROGRAM IS DEFINED AS THE QUAKE 3 MOD "ROCKET ARENA 3" AND
+  ALL FILES CONTAINED WITHIN.
+  BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+  FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
+  OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+  PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
+  OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
+  TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
+  PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+  REPAIR OR CORRECTION.
+
+Quake 3: Arena© is copyright ©1999/2000 Id Software, Inc. Quake© is a
+registered trademark of Id Software. Quake 3™, the Id Software name are
+trademarks of Id Software, Inc.

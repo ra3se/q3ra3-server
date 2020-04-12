@@ -1,0 +1,14 @@
+version: "3"
+services:
+  quake3-server:
+    build: quake3
+    container_name: quake3
+    command: "+set fs_game arena +set vm_game 0 +set sv_pure 1 +set dedicated 2 +set net_port 27960 +exec server.cfg"
+    ports:
+      - "27960:27960/udp"
+    restart: unless-stopped
+    volumes:
+      - ./pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3
+      - ./arena:/usr/share/games/quake3/arena
+      - ./server.cfg:/usr/share/games/quake3/baseq3/server.cfg
+      - ./arena.cfg:/usr/share/games/quake3/arena/arena.cfg

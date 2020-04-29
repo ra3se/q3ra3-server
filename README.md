@@ -6,4 +6,5 @@ Based on [docker-quake3](https://github.com/InAnimaTe/docker-quake3) with minor 
 
 * Install docker and docker-compose
 * change password in `server.cfg`
+* change database password in `docker-compose.yaml` and `reporter/config.json`
 * Add `pak0.pk3` to directory and run with `docker-compose up -d`

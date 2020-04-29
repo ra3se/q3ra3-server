@@ -1,13 +1,42 @@
 version: "3"
 services:
-  quake3-server:
+  db:
+    image: mariadb:latest
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=q3ra3
+      - MYSQL_USER=sarge
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/mysql
+  game:
     build: quake3
-    container_name: quake3
-    command: "+set fs_game arena +set vm_game 0 +set sv_pure 1 +set dedicated 2 +set net_port 27960 +exec server.cfg"
+    command: "/usr/games/quake3-server +set fs_game arena +exec server.cfg"
     ports:
       - "27960:27960/udp"
     restart: unless-stopped
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+    depends_on:
+      - reporter
     volumes:
       - ./pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3
       - ./server.cfg:/usr/share/games/quake3/arena/server.cfg
       - ./arena.cfg:/usr/share/games/quake3/arena/arena.cfg
+  reporter:
+    build: reporter
+    ports:
+      - "80:80"
+      - "3031:3031"
+      - "514:514"
+    restart: unless-stopped
+    command: "/app/start.sh"
+    depends_on:
+      - db
+    volumes:
+      - ./reporter/config.json:/app/config.json

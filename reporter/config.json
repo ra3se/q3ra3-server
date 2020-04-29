@@ -1,0 +1,22 @@
+{
+	"debug": true,
+	"server": {
+		"type": "quake3",
+		"host": "game",
+		"port": 27960,
+		"rconPass": ""
+	},
+	"websocket": {
+		"port": 3031
+	},
+	"database": {
+		"client": "mysql",
+    "connection": {
+      "host": "db",
+      "user": "sarge",
+      "password": "password",
+      "database": "q3ra3"
+    }
+	},
+	"print": true
+}

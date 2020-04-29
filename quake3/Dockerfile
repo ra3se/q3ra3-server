@@ -25,12 +25,8 @@ RUN wget "http://youfailit.net/pub/idgames/idstuff/quake3/linux/${ioquake_data}"
         ./${ioquake_data} --tar xvf && \
         rm -rf ./${ioquake_data}
 
-COPY ./arena /usr/share/games/quake3/arena
-
 USER Debian-quake3
 
+COPY ./arena /usr/share/games/quake3/arena
+
 EXPOSE 27960/udp
-
-ENTRYPOINT ["/usr/games/quake3-server"]
-
-CMD ["+map", "ra3map1", "+exec", "server.cfg"]

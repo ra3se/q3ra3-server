@@ -29,4 +29,8 @@ USER Debian-quake3
 
 COPY ./arena /usr/share/games/quake3/arena
 
+RUN mkdir -p /var/games/quake3-server/.q3a/arena && \
+        touch /var/games/quake3-server/.q3a/arena/games.log && \
+        ln -sf /dev/stdout /var/games/quake3-server/.q3a/arena/games.log
+
 EXPOSE 27960/udp

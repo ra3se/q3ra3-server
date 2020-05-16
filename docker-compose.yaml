@@ -28,6 +28,7 @@ services:
       - ./pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3
       - ./server.cfg:/usr/share/games/quake3/arena/server.cfg
       - ./arena.cfg:/usr/share/games/quake3/arena/arena.cfg
+      - ./ra3.db:/var/games/quake3-server/.q3a/arena/ra3.db
   reporter:
     build: reporter
     ports:

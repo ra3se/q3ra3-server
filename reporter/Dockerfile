@@ -2,6 +2,8 @@ FROM alpine:3.11
 
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 RUN apk add --no-cache git nodejs yarn && \
   git clone https://github.com/ra3-se/quake3-server-report.git /app && \
   yarn install && \

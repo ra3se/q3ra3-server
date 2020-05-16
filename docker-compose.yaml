@@ -41,3 +41,4 @@ services:
       - db
     volumes:
       - ./reporter/config.json:/app/config.json
+      - ./reporter/knexfile.js:/app/knexfile.js

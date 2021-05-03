@@ -3,9 +3,11 @@ version: "3"
 services:
   q3ra3:
     image: ra3se/q3ra3-server
+    environment:
+      MAP: "ra3map19"
     ports:
       - "27960:27960/udp"
     volumes:
-      - "${PWD}/pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3"
-      - "${PWD}/arena/server.cfg:/usr/share/games/quake3/arena/server.cfg"
-      - "${PWD}/arena/arena.cfg:/usr/share/games/quake3/arena/arena.cfg"
+      - "${PWD}/pak0.pk3:/quake3/baseq3/pak0.pk3"
+      - "${PWD}/arena/server.cfg:/quake3/arena/server.cfg"
+      - "${PWD}/arena/arena.cfg:/quake3/arena/arena.cfg"

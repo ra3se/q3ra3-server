@@ -1,38 +1,85 @@
-FROM i386/debian:jessie
+FROM i386/alpine:latest as builder
 
-## The Data from the official point release.
-ENV ioquake_data linuxq3apoint-1.32b-3.x86.run
+RUN apk --no-cache add wget build-base libcurl && \
+  mkdir -p /build 
 
-RUN echo "deb http://httpredir.debian.org/debian jessie contrib" >> /etc/apt/sources.list && \
-        apt-get update && \
-        apt-get install -y quake3-server \
-        wget && \
-            apt-get clean
+WORKDIR /build
 
-RUN rm -rf \
-        /var/lib/apt/lists/* \
-        /tmp/* \
-        /var/tmp/* \
-        /usr/share/locale/* \
-        /var/cache/debconf/*-old \
-        /var/lib/apt/lists/* \
-        /usr/share/doc/*
+RUN wget http://ftp2.de.freebsd.org/pub/misc/ftp.idsoftware.com/idstuff/quake3/linux/linuxq3apoint-1.32b-3.x86.run && \
+    chmod +x linuxq3apoint-1.32b-3.x86.run && \
+    ./linuxq3apoint-1.32b-3.x86.run --tar xvf && \
+    rm linuxq3apoint-1.32b-3.x86.run
 
-WORKDIR /usr/share/games/quake3
+RUN wget https://github.com/ec-/Quake3e/archive/refs/tags/latest.zip && \
+    unzip latest.zip && \
+    rm latest.zip && \
+    cd Quake3e-latest && \
+    make install BUILD_CLIENT=0 BUILD_SERVER=1 ARCH=i386 DESTDIR=/quake3
 
-RUN wget "http://youfailit.net/pub/idgames/idstuff/quake3/linux/${ioquake_data}" && \
-        chmod +x ${ioquake_data} && \
-        ./${ioquake_data} --tar xvf && \
-        rm -rf ./${ioquake_data}
+# =====================================
 
-USER Debian-quake3
+FROM i386/alpine:latest 
+RUN adduser q3 -D && \
+    mkdir /quake3
 
-COPY ./arena /usr/share/games/quake3/arena
+WORKDIR /quake3
 
-RUN mkdir -p /var/games/quake3-server/.q3a/arena && \
-        touch /var/games/quake3-server/.q3a/arena/games.log && \
-        ln -sf /dev/stdout /var/games/quake3-server/.q3a/arena/games.log
+COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
+COPY --from=builder --chown=q3 /quake3 /quake3
 
+COPY --chown=q3 ./arena /quake3/arena
+
+USER q3
 EXPOSE 27960/udp
 
-CMD /usr/games/quake3-server +set fs_game arena +exec server.cfg
+ENV SV_STRICTAUTH 0
+ENV ARENACFG arena.cfg
+ENV COM_HUNKMEGS 64
+ENV G_ADMINPASS foo
+ENV G_CHATFLOOD 5:5:2
+ENV G_MOTD Welcome to Rocket Arena 3...
+ENV G_TRACKPLAYERS 1
+ENV G_TRACKSTATS 1
+ENV G_VOTEINTERVAL 30
+ENV G_VOTEPERCENT 60
+ENV RCONPASSWORD foo
+ENV SV_FLOODPROTECT 0
+ENV SV_FPS 30
+ENV SV_HOSTNAME Rocket Arena 3 1.7 Server
+ENV SV_MAXCLIENTS 16
+ENV SV_PRIVATECLIENTS 0
+ENV SV_PRIVATEPASSWORD qwerty
+ENV SV_STRICTAUTH 0
+ENV TIMELIMIT 30
+ENV LOCATION 0
+ENV MAP ra3map10
+
+CMD /quake3/quake3e.ded \
+    +set fs_game arena \
+    +set net_port 27960 \
+    +set vm_game 0 \
+    +set sv_pure 1 \
+    +set bot_enable 0 \
+    +set dedicated 2 \
+    +exec server.cfg \
+    +set sv_strictauth ${SV_STRICTAUTH} \
+    +set arenacfg ${ARENACFG} \
+    +set com_hunkmegs ${COM_HUNKMEGS} \
+    +set g_adminpass ${G_ADMINPASS} \
+    +set g_chatFlood ${G_CHATFLOOD} \
+    +set g_motd ${G_MOTD} \
+    +set g_trackPlayers ${G_TRACKPLAYERS} \
+    +set g_trackStats ${G_TRACKSTATS} \
+    +set g_voteInterval ${G_VOTEINTERVAL} \
+    +set g_votePercent ${G_VOTEPERCENT} \
+    +set rconPassword ${RCONPASSWORD} \
+    +set sv_floodprotect ${SV_FLOODPROTECT} \
+    +set sv_fps ${SV_FPS} \
+    +set sv_hostname ${SV_HOSTNAME} \
+    +set sv_maxclients ${SV_MAXCLIENTS} \
+    +set sv_privateClients ${SV_PRIVATECLIENTS} \
+    +set sv_privatePassword ${SV_PRIVATEPASSWORD} \
+    +set sv_strictauth ${SV_STRICTAUTH} \
+    +set timelimit ${TIMELIMIT} \
+    +sets location ${LOCATION} \
+    +map ${MAP}

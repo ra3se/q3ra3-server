@@ -3,6 +3,7 @@ version: "3"
 services:
   q3ra3:
     image: ra3se/q3ra3-server
+    restart: always
     environment:
       MAP: ra3map10
     ports:

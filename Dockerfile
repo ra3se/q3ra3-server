@@ -32,9 +32,7 @@ WORKDIR /quake3
 COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
 COPY --from=builder --chown=q3 /quake3 /quake3
 
-COPY --chown=q3 ./arena/qagamei386.so /quake3/arena/
-COPY --chown=q3 ./arena/ra3map*.pk3 /quake3/arena/
-COPY --chown=q3 ./arena/arena.cfg /quake3/arena/
+COPY --chown=q3 ./arena /quake3/arena
 
 USER q3
 EXPOSE 27960/udp
@@ -68,7 +66,6 @@ CMD /quake3/quake3e.ded \
     +set sv_pure 0 \
     +set bot_enable 0 \
     +set dedicated 2 \
-    +exec server.cfg \
     +set sv_strictauth ${SV_STRICTAUTH} \
     +set arenacfg ${ARENACFG} \
     +set com_hunkmegs ${COM_HUNKMEGS} \
@@ -89,4 +86,5 @@ CMD /quake3/quake3e.ded \
     +set sv_strictauth ${SV_STRICTAUTH} \
     +set timelimit ${TIMELIMIT} \
     +sets location ${LOCATION} \
-    +map ${MAP}
+    +map ${MAP} \
+    +exec server.cfg

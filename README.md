@@ -69,6 +69,7 @@ version: "3"
 services:
   q3ra3:
     image: ra3se/q3ra3-server
+    restart: always
     environment:
       G_ADMINPASS: "CHANGE_THIS_PASSWORD"
       RCONPASSWORD: "CHANGE_THIS_PASSWORD"

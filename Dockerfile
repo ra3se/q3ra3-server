@@ -32,9 +32,9 @@ WORKDIR /quake3
 COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
 COPY --from=builder --chown=q3 /quake3 /quake3
 
-COPY --chown=q3 ./arena/qagamei386.so /quake3/arena
-COPY --chown=q3 ./arena/ra3map*.pk3 /quake3/arena
-COPY --chown=q3 ./arena/arena.cfg /quake3/arena
+COPY --chown=q3 ./arena/qagamei386.so /quake3/arena/
+COPY --chown=q3 ./arena/ra3map*.pk3 /quake3/arena/
+COPY --chown=q3 ./arena/arena.cfg /quake3/arena/
 
 USER q3
 EXPOSE 27960/udp

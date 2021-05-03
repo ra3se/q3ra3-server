@@ -35,4 +35,4 @@ RUN mkdir -p /var/games/quake3-server/.q3a/arena && \
 
 EXPOSE 27960/udp
 
-CMD "/usr/games/quake3-server +set fs_game arena +exec server.cfg"
+CMD /usr/games/quake3-server +set fs_game arena +exec server.cfg

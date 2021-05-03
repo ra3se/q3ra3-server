@@ -1,4 +1,4 @@
-# q3ra3-server
+# Quake 3 Rocket Arena 3 Server
 
 Based on [docker-quake3](https://github.com/InAnimaTe/docker-quake3) with minor tweaks to work as Rocket Arena 3 server. Requires pak0.pk3 from Quake 3.
 
@@ -8,9 +8,9 @@ Based on [docker-quake3](https://github.com/InAnimaTe/docker-quake3) with minor 
 docker run -d \
     --name q3ra3 \
     -p 27960:27960/udp \
-    -v "${PWD}/pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3" \
-    -v "${PWD}/server.cfg:/usr/share/games/quake3/arena/server.cfg"
-    -v "${PWD}/arena.cfg:/usr/share/games/quake3/arena/arena.cfg"
+    -v "./pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3" \
+    -v "./server.cfg:/usr/share/games/quake3/arena/server.cfg" \
+    -v "./arena.cfg:/usr/share/games/quake3/arena/arena.cfg" \
     ra3se/q3ra3-server
 ```
 

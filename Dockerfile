@@ -1,7 +1,9 @@
-FROM i386/alpine:latest as builder
+FROM i386/debian:latest as builder
 
-RUN apk --no-cache add wget build-base libcurl && \
-  mkdir -p /build 
+RUN apt-get update && \
+    apt-get install -y wget unzip make gcc libcurl4-openssl-dev
+
+RUN mkdir -p /build
 
 WORKDIR /build
 
@@ -14,20 +16,25 @@ RUN wget https://github.com/ec-/Quake3e/archive/refs/tags/latest.zip && \
     unzip latest.zip && \
     rm latest.zip && \
     cd Quake3e-latest && \
-    make install BUILD_CLIENT=0 BUILD_SERVER=1 ARCH=i386 DESTDIR=/quake3
+    make install BUILD_CLIENT=0 BUILD_SERVER=1 ARCH=x86 DESTDIR=/quake3
 
 # =====================================
 
-FROM i386/alpine:latest 
-RUN adduser q3 -D && \
-    mkdir /quake3
+FROM i386/debian:latest 
+RUN useradd -ms /bin/bash -d /quake3 q3
+RUN mkdir -p /quake3/arena && \
+    mkdir -p /arena && \
+    chown -R q3:q3 /quake3 && \
+    chown -R q3:q3 /arena
 
 WORKDIR /quake3
 
 COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
 COPY --from=builder --chown=q3 /quake3 /quake3
 
-COPY --chown=q3 ./arena /quake3/arena
+COPY --chown=q3 ./arena/qagamei386.so /quake3/arena
+COPY --chown=q3 ./arena/ra3map*.pk3 /quake3/arena
+COPY --chown=q3 ./arena/arena.cfg /quake3/arena
 
 USER q3
 EXPOSE 27960/udp
@@ -58,7 +65,7 @@ CMD /quake3/quake3e.ded \
     +set fs_game arena \
     +set net_port 27960 \
     +set vm_game 0 \
-    +set sv_pure 1 \
+    +set sv_pure 0 \
     +set bot_enable 0 \
     +set dedicated 2 \
     +exec server.cfg \

@@ -4,7 +4,7 @@ services:
   q3ra3:
     image: ra3se/q3ra3-server
     environment:
-      MAP: "ra3map19"
+      MAP: ra3map10
     ports:
       - "27960:27960/udp"
     volumes:

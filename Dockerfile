@@ -34,3 +34,5 @@ RUN mkdir -p /var/games/quake3-server/.q3a/arena && \
         ln -sf /dev/stdout /var/games/quake3-server/.q3a/arena/games.log
 
 EXPOSE 27960/udp
+
+CMD "/usr/games/quake3-server +set fs_game arena +exec server.cfg"

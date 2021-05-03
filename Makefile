@@ -21,7 +21,7 @@ help:
 .DEFAULT_GOAL := all
 
 build:
-	@docker build --pull --build-arg ALP_VER=${version} -t ${IMAGEFULLNAME} .
+	@docker build --pull -t ${IMAGEFULLNAME} .
 
 push:
 	@docker push ${IMAGEFULLNAME}

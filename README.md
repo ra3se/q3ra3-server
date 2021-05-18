@@ -1,5 +1,9 @@
 # Quake 3 Rocket Arena 3 Server
 
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/ra3se/q3ra3-server)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ra3se/q3ra3-server)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/ra3se/q3ra3-server)
+
 Quake 3 server for Rocket Arena 3 using Quake3e. Requires pak0.pk3 from original install.
 
 ## Options

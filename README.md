@@ -59,9 +59,9 @@ docker run -d \
     -p 27960:27960/udp \
     -e "G_ADMINPASS=CHANGE_THIS_PASSWORD" \
     -e "RCONPASSWORD=CHANGE_THIS_PASSWORD" \
-    -v "./pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3" \
-    -v "./server.cfg:/usr/share/games/quake3/arena/server.cfg" \
-    -v "./arena.cfg:/usr/share/games/quake3/arena/arena.cfg" \
+    -v "./pak0.pk3:/quake3/baseq3/pak0.pk3" \
+    -v "./server.cfg:/quake3/arena/server.cfg" \
+    -v "./arena.cfg:/quake3/arena/arena.cfg" \
     ra3se/q3ra3-server
 ```
 

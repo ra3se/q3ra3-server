@@ -62,7 +62,8 @@ docker run -d \
     -v "./pak0.pk3:/quake3/baseq3/pak0.pk3" \
     -v "./server.cfg:/quake3/arena/server.cfg" \
     -v "./arena.cfg:/quake3/arena/arena.cfg" \
-    ra3se/q3ra3-server
+    --platform Linux/386 \
+    ghcr.io/ra3se/q3ra3-server
 ```
 
 ## docker-compose example

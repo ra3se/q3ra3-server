@@ -73,7 +73,8 @@ version: "3"
 
 services:
   q3ra3:
-    image: ra3se/q3ra3-server
+    image: ghcr.io/ra3se/q3ra3-server
+    platform: Linux/386
     restart: always
     environment:
       G_ADMINPASS: "CHANGE_THIS_PASSWORD"

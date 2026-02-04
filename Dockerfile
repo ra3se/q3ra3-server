@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   unzip \
   wget \
   git \
+  zip \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /build
@@ -15,7 +16,10 @@ WORKDIR /build
 
 RUN git clone https://github.com/inolen/ra3_176_decomp.git && \
     cd ra3_176_decomp/ra3-sdk && \
-    ENABLE_QVM=1 make
+    ENABLE_QVM=1 make && \
+    mkdir -p vm && \
+    mv build/qagame.qvm vm/ && \
+    zip -m vmarena.pk3 vm/qagame.qvm
 
 RUN wget http://ftp2.de.freebsd.org/pub/misc/ftp.idsoftware.com/idstuff/quake3/linux/linuxq3apoint-1.32b-3.x86.run && \
     chmod +x linuxq3apoint-1.32b-3.x86.run && \
@@ -26,7 +30,7 @@ RUN wget https://github.com/ec-/Quake3e/archive/refs/tags/latest.zip && \
     unzip latest.zip && \
     rm latest.zip && \
     cd Quake3e-latest && \
-    make install BUILD_CLIENT=0 BUILD_SERVER=1 ARCH=x86_64 DESTDIR=/quake3
+    make install BUILD_CLIENT=0 BUILD_SERVER=1 DESTDIR=/quake3
 
 # =====================================
 
@@ -43,7 +47,7 @@ COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
 COPY --from=builder --chown=q3 /quake3 /quake3
 
 COPY --chown=q3 ./arena /quake3/arena
-COPY --from=builder --chown=q3 /build/ra3_176_decomp/ra3-sdk/build/qagame.qvm /quake3/arena/vm/qagame.qvm
+COPY --from=builder --chown=q3 /build/ra3_176_decomp/ra3-sdk/vmarena.pk3 /quake3/arena/vmarena.pk3
 
 USER q3
 EXPOSE 27960/udp

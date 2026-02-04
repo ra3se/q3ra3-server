@@ -3,7 +3,6 @@
 [![Publish Docker image](https://github.com/ra3se/q3ra3-server/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ra3se/q3ra3-server/actions/workflows/docker-publish.yml)
 ![Docker Image Size (latest by date)](https://ghcr-badge.egpl.dev/ra3se/q3ra3-server/size?color=%2344cc11&tag=latest&label=image+size&trim=)
 
-
 Quake 3 server for Rocket Arena 3 using Quake3e. Requires pak0.pk3 from original install.
 
 ## Options
@@ -33,6 +32,8 @@ You can change the most common settings using enviromental flags
 | SV_STRICTAUTH      | 0                            | You will want to disable strictauth because it's broken and not needed  |
 | TIMELIMIT          | 30                           | Set the time to cycle maps, ra3 does not use fraglimit, only timelimit  |
 
+If `G_ADMINPASS` or `RCONPASSWORD` is not set, a random value will be generated on startup.
+
 ### Locations
 
 Use the following for location:
@@ -53,8 +54,8 @@ Use the following for location:
 
 ## docker example
 
-```console
-docker run -d \
+```bash
+$ docker run -d \
     --name q3ra3 \
     -p 27960:27960/udp \
     -e "G_ADMINPASS=CHANGE_THIS_PASSWORD" \
@@ -68,8 +69,6 @@ docker run -d \
 ## docker-compose example
 
 ```yaml
-version: "3"
-
 services:
   q3ra3:
     image: ghcr.io/ra3se/q3ra3-server
@@ -80,11 +79,11 @@ services:
     ports:
       - "27960:27960/udp"
     volumes:
-      - "${PWD}/pak0.pk3:/usr/share/games/quake3/baseq3/pak0.pk3"
-      - "${PWD}/server.cfg:/usr/share/games/quake3/arena/server.cfg"
-      - "${PWD}/arena.cfg:/usr/share/games/quake3/arena/arena.cfg"
+      - "${PWD}/pak0.pk3:/quake3/baseq3/pak0.pk3"
+      - "${PWD}/server.cfg:/quake3/arena/server.cfg"
+      - "${PWD}/arena.cfg:/quake3/arena/arena.cfg"
 ```
 
 ### Special thanks
 
-Thanks to inolen for the decompiled server code https://github.com/inolen/ra3_176_decomp
+Thanks inolen for the decompiled server code <https://github.com/inolen/ra3_176_decomp>

@@ -1,15 +1,15 @@
 FROM debian:latest as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ca-certificates \
-  gcc \
-  libcurl4-openssl-dev \
-  make \
-  unzip \
-  wget \
-  git \
-  zip \
-  && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    gcc \
+    libcurl4-openssl-dev \
+    make \
+    unzip \
+    wget \
+    git \
+    zip \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /build
 WORKDIR /build
@@ -55,14 +55,12 @@ EXPOSE 27960/udp
 ENV SV_STRICTAUTH 0
 ENV ARENACFG arena.cfg
 ENV COM_HUNKMEGS 64
-ENV G_ADMINPASS foo
 ENV G_CHATFLOOD 5:5:2
 ENV G_MOTD Welcome to Rocket Arena 3...
 ENV G_TRACKPLAYERS 1
 ENV G_TRACKSTATS 1
 ENV G_VOTEINTERVAL 30
 ENV G_VOTEPERCENT 60
-ENV RCONPASSWORD foo
 ENV SV_FLOODPROTECT 0
 ENV SV_FPS 30
 ENV SV_HOSTNAME Rocket Arena 3 1.7 Server
@@ -73,6 +71,9 @@ ENV SV_STRICTAUTH 0
 ENV TIMELIMIT 30
 ENV LOCATION 0
 ENV MAP ra3map10
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD /quake3/quake3e.ded.x64 \
     +set fs_game arena \

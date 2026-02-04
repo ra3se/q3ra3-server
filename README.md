@@ -1,8 +1,8 @@
 # Quake 3 Rocket Arena 3 Server
 
-![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/ra3se/q3ra3-server)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ra3se/q3ra3-server)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/ra3se/q3ra3-server)
+[![Publish Docker image](https://github.com/ra3se/q3ra3-server/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ra3se/q3ra3-server/actions/workflows/docker-publish.yml)
+![Docker Image Size (latest by date)](https://ghcr-badge.egpl.dev/ra3se/q3ra3-server/size?color=%2344cc11&tag=latest&label=image+size&trim=)
+
 
 Quake 3 server for Rocket Arena 3 using Quake3e. Requires pak0.pk3 from original install.
 
@@ -62,7 +62,6 @@ docker run -d \
     -v "./pak0.pk3:/quake3/baseq3/pak0.pk3" \
     -v "./server.cfg:/quake3/arena/server.cfg" \
     -v "./arena.cfg:/quake3/arena/arena.cfg" \
-    --platform Linux/386 \
     ghcr.io/ra3se/q3ra3-server
 ```
 
@@ -74,7 +73,6 @@ version: "3"
 services:
   q3ra3:
     image: ghcr.io/ra3se/q3ra3-server
-    platform: Linux/386
     restart: always
     environment:
       G_ADMINPASS: "CHANGE_THIS_PASSWORD"
@@ -86,3 +84,7 @@ services:
       - "${PWD}/server.cfg:/usr/share/games/quake3/arena/server.cfg"
       - "${PWD}/arena.cfg:/usr/share/games/quake3/arena/arena.cfg"
 ```
+
+### Special thanks
+
+Thanks to inolen for the decompiled server code https://github.com/inolen/ra3_176_decomp

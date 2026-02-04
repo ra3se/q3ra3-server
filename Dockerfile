@@ -1,11 +1,21 @@
-FROM i386/debian:latest as builder
+FROM debian:latest as builder
 
-RUN apt-get update && \
-    apt-get install -y wget unzip make gcc libcurl4-openssl-dev
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ca-certificates \
+  gcc \
+  libcurl4-openssl-dev \
+  make \
+  unzip \
+  wget \
+  git \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /build
-
 WORKDIR /build
+
+RUN git clone https://github.com/inolen/ra3_176_decomp.git && \
+    cd ra3_176_decomp/ra3-sdk && \
+    ENABLE_QVM=1 make
 
 RUN wget http://ftp2.de.freebsd.org/pub/misc/ftp.idsoftware.com/idstuff/quake3/linux/linuxq3apoint-1.32b-3.x86.run && \
     chmod +x linuxq3apoint-1.32b-3.x86.run && \
@@ -16,13 +26,13 @@ RUN wget https://github.com/ec-/Quake3e/archive/refs/tags/latest.zip && \
     unzip latest.zip && \
     rm latest.zip && \
     cd Quake3e-latest && \
-    make install BUILD_CLIENT=0 BUILD_SERVER=1 ARCH=x86 DESTDIR=/quake3
+    make install BUILD_CLIENT=0 BUILD_SERVER=1 ARCH=x86_64 DESTDIR=/quake3
 
 # =====================================
 
-FROM i386/debian:latest 
+FROM debian:latest 
 RUN useradd -ms /bin/bash -d /quake3 q3
-RUN mkdir -p /quake3/arena && \
+RUN mkdir -p /quake3/arena/vm && \
     mkdir -p /arena && \
     chown -R q3:q3 /quake3 && \
     chown -R q3:q3 /arena
@@ -33,6 +43,7 @@ COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
 COPY --from=builder --chown=q3 /quake3 /quake3
 
 COPY --chown=q3 ./arena /quake3/arena
+COPY --from=builder --chown=q3 /build/ra3_176_decomp/ra3-sdk/build/qagame.qvm /quake3/arena/vm/qagame.qvm
 
 USER q3
 EXPOSE 27960/udp
@@ -59,7 +70,7 @@ ENV TIMELIMIT 30
 ENV LOCATION 0
 ENV MAP ra3map10
 
-CMD /quake3/quake3e.ded \
+CMD /quake3/quake3e.ded.x64 \
     +set fs_game arena \
     +set net_port 27960 \
     +set vm_game 0 \

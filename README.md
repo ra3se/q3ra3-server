@@ -82,6 +82,9 @@ services:
       - "${PWD}/pak0.pk3:/quake3/baseq3/pak0.pk3"
       - "${PWD}/server.cfg:/quake3/arena/server.cfg"
       - "${PWD}/arena.cfg:/quake3/arena/arena.cfg"
+      - "db:/arena" 
+volumes:
+    db:
 ```
 
 ### Special thanks

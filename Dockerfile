@@ -41,8 +41,6 @@ RUN mkdir -p /quake3/arena/vm && \
     chown -R q3:q3 /quake3 && \
     chown -R q3:q3 /arena
 
-# Perl is already included in the image, no need to install
-
 WORKDIR /quake3
 
 COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3

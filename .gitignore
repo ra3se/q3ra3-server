@@ -1,2 +1,13 @@
+# Database directory
 /db
-pak0.pk3
+
+# Quake 3 base game files - these are proprietary and should not be committed
+# This covers pak0.pk3 in any location within the project
+**/pak0.pk3
+**/baseq3/pak0.pk3
+**/quake3/baseq3/pak0.pk3
+
+# Also ignore other common Quake 3 pak files
+**/pak*.pk3
+**/baseq3/pak*.pk3
+**/quake3/baseq3/pak*.pk3

@@ -41,6 +41,8 @@ RUN mkdir -p /quake3/arena/vm && \
     chown -R q3:q3 /quake3 && \
     chown -R q3:q3 /arena
 
+# Perl is already included in the image, no need to install
+
 WORKDIR /quake3
 
 COPY --from=builder --chown=q3 /build/baseq3 /quake3/baseq3
@@ -48,11 +50,15 @@ COPY --from=builder --chown=q3 /quake3 /quake3
 
 COPY --chown=q3 ./arena /quake3/arena
 COPY --from=builder --chown=q3 /build/ra3_176_decomp/ra3-sdk/vmarena.pk3 /quake3/arena/vmarena.pk3
+COPY --chown=q3 ./getstatus.pl /quake3/getstatus.pl
 
 USER q3
 EXPOSE 27960/udp
 
-ENV SV_STRICTAUTH 0
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD /quake3/getstatus.pl | grep -q "statusResponse" || exit 1
+
+ENV SV_STRICTAUTH 0    
 ENV ARENACFG arena.cfg
 ENV COM_HUNKMEGS 64
 ENV G_CHATFLOOD 5:5:2

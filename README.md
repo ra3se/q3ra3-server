@@ -87,6 +87,10 @@ volumes:
     db:
 ```
 
+## Health Monitoring
+
+The server includes a built-in health check that uses the Quake 3 server query protocol to verify the game server is responding correctly.
+
 ### Special thanks
 
 Thanks inolen for the decompiled server code <https://github.com/inolen/ra3_176_decomp>
